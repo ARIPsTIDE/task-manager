@@ -1,0 +1,46 @@
+name: Security - Trivy Scan
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+
+jobs:
+  trivy-scan:
+    name: Trivy filesystem scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Trivy
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget
+          wget https://github.com/aquasecurity/trivy/releases/download/v0.68.2/trivy_0.68.2_Linux-64bit.deb
+          sudo dpkg -i trivy_0.68.2_Linux-64bit.deb
+
+      - name: Trivy scan (fail on HIGH & CRITICAL)
+        run: |
+          trivy fs \
+            --scanners vuln \
+            --severity HIGH,CRITICAL \
+            --exit-code 1 \
+            .
+
+      - name: Generate SBOM (CycloneDX)
+        run: |
+          trivy fs \
+            --scanners vuln \
+            --format cyclonedx \
+            --output sbom.json \
+            .
+
+      - name: Upload SBOM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-sbom
+          path: sbom.json
