@@ -15,7 +15,7 @@ MarkupSafe==3.0.3
 nodeenv==1.10.0
 platformdirs==4.5.1
 pre_commit==4.5.1
-pydantic==2.10.3
+pydantic==2.12.5
 pydantic_core==2.27.1
 python-dotenv==1.2.1
 PyYAML==6.0.1
