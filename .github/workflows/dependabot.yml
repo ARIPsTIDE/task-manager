@@ -1,0 +1,43 @@
+name: Dependabot CI
+
+on:
+  pull_request:
+    paths:
+      - 'backend/**'
+
+jobs:
+  test-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          pip install --upgrade pip
+          pip install -r backend/requirements.txt
+
+      - name: Run tests
+        run: |
+          source .venv/bin/activate
+          pytest backend/tests
+
+      - name: Run Trivy scan
+        uses: aquasecurity/trivy-action@v2
+        with:
+          scan-type: fs
+          directory: backend
+          severity: HIGH,CRITICAL
+
+      - name: Enable auto-merge if CI passes
+        if: github.actor == 'dependabot[bot]' && success()
+        uses: peter-evans/enable-pull-request-automerge@v2
+        with:
+          merge-method: squash
