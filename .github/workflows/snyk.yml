@@ -1,23 +1,23 @@
-name: Snyk Dependency Security Scan
+name: Snyk Security Scan
 
 on:
   push:
-    branches: [ "main", "develop" ]
+    branches: [ "master", "main" ]
   pull_request:
-    branches: [ "main", "develop" ]
+    branches: [ "master", "main" ]
 
 jobs:
   snyk:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.12"
 
       - name: Install dependencies
         run: |
@@ -25,17 +25,16 @@ jobs:
           pip install -r backend/requirements.txt
 
       - name: Install Snyk CLI
-        run: npm install -g snyk
+        run: |
+          npm install -g snyk
 
       - name: Authenticate Snyk
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        run: snyk auth "$SNYK_TOKEN"
+        run: snyk auth $SNYK_TOKEN
 
-      - name: Run Snyk security scan
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      - name: Run Snyk test
         run: |
           snyk test \
             --file=backend/requirements.txt \
-            --severity-threshold=high
+            --severity-threshold=critical
