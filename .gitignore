@@ -6,3 +6,8 @@
 __pycache__/
 *.pyc
 .venv/
+
+# MkDocs build
+site/
+.venv/
+__pycache__/
