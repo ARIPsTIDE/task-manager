@@ -1,0 +1,13 @@
+site_name: Task Manager
+theme:
+  name: material
+
+nav:
+  - Home: index.md
+  - Backend:
+      - API: backend/api.md
+      - Models: backend/models.md
+  - Frontend:
+      - UI: frontend/ui.md
+  - Architecture:
+      - Overview: architecture/overview.md
