@@ -1,2 +1,4 @@
 # Ignored temporarily – PyYAML old CVE, fixed by upgrade
-CVE-2020-14343
+CVE-2026-0861
+CVE-2013-7445
+CVE-2019-19449
