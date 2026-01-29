@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/task-manager
+      IMAGE_NAME: ghcr.io/aripstide/task-manager
       TAG: ${{ github.sha }}
 
     steps:
