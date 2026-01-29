@@ -1,0 +1,22 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    image: task-manager-backend:dev
+    ports:
+      - "8000:8000"
+    volumes:
+      - db-data:/app/db
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    image: task-manager-frontend:dev
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+
+volumes:
+  db-data:

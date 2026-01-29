@@ -2,30 +2,28 @@
 FROM python:3.12-slim
 
 # Variables d'environnement Python
-# Eviter de créer des fichiers .pyc
 ENV PYTHONDONTWRITEBYTECODE=1
-# Désactiver les buffering des logs
 ENV PYTHONUNBUFFERED=1
 
 # Dossier de travail dans le container
 WORKDIR /app
 
-# Dépendances systèmes minimales - compiler certaines libs Python
+# Dépendances systèmes minimales pour compiler certaines libs Python
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends build-essential \
+    && apt-get install -y --no-install-recommends build-essential curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Copier uniquement les dépendances pour le cache
+# Copier uniquement les dépendances pour optimiser le cache
 COPY backend/requirements.txt .
 
-# Installation des dépendances Python
+# Installer les dépendances Python
 RUN pip install --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt
 
-# Copier le code applicatif
-COPY . .
+# Copier uniquement le code backend
+COPY backend/ .
 
-# Création d'un utilisateur non-root - Par défaut Docker tourne en root
+# Créer un utilisateur non-root
 RUN adduser --disabled-password --gecos "" appuser \
     && chown -R appuser:appuser /app
 
@@ -34,9 +32,5 @@ USER appuser
 # Port exposé
 EXPOSE 8000
 
-# Ajout du healthcheck - vérifie si l'app est vivante
-HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:8000/health || exit 1
-
-#Lancement de l'application
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Lancer l'application
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
