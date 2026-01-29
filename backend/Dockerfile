@@ -1,6 +1,8 @@
 # Version slim plus légère
 FROM python:3.12-slim
 
+LABEL maintainer="ton.nom@exemple.com"
+
 # Variables d'environnement Python
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
