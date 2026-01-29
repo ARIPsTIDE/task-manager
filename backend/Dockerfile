@@ -32,8 +32,7 @@ RUN adduser --disabled-password --gecos "" appuser \
 USER appuser
 
 # Port exposé
-EXPOSE 8000COPY requirements.txt .
-
+EXPOSE 8000
 
 # Ajout du healthcheck - vérifie si l'app est vivante
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
