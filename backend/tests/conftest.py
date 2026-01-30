@@ -9,10 +9,13 @@ from app.db import Base, get_db
 SQLALCHEMY_DATABASE_URL = "sqlite+pysqlite:///:memory:"
 
 engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+    SQLALCHEMY_DATABASE_URL,
+    connect_args={"check_same_thread": False},
 )
-TestingSessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 
+TestingSessionLocal = sessionmaker(
+    bind=engine, autoflush=False, autocommit=False
+)
 
 @pytest.fixture(scope="session")
 def db_engine():
@@ -20,8 +23,7 @@ def db_engine():
     yield engine
     Base.metadata.drop_all(bind=engine)
 
-
-@pytest.fixture()
+@pytest.fixture
 def db_session(db_engine):
     session = TestingSessionLocal()
     try:
@@ -29,8 +31,7 @@ def db_session(db_engine):
     finally:
         session.close()
 
-
-@pytest.fixture()
+@pytest.fixture
 def client(db_session):
     def override_get_db():
         yield db_session
